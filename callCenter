@@ -1,0 +1,87 @@
+import cmd, sys
+
+queue = []
+ringQueue = []
+ongoingQueue = []
+
+class operator:
+    def __init__(self):
+        pass
+
+    def setName(self, name):
+        self.name = name
+
+    def setStatus(self, status = "available"):
+        self.status = status
+
+    def getName(self):
+        return self.name
+
+    def getStatus(self):
+        return self.status
+
+
+class callCenter(cmd.Cmd):
+    intro = '\nWelcome to the Call Center VulcaNet.   Type help or ? to list commands.\n'
+    prompt = '(callCenter) '
+    
+    #---------------- call center commands --------------
+    
+    def do_create(self, arg):
+        createOperator(arg)
+        
+    def do_call(self, arg):
+        call(*parse(arg), operator)
+
+    def do_answer(self, arg):
+        answer(*parse(arg))
+
+    def do_reject(self, arg):
+        reject(*parse(arg))
+
+    def do_hangup(self, arg):
+        hangup(*parse(arg))
+
+def parse(arg):
+    return tuple(map(int, arg.split()))
+
+def createOperator(name, status = 'available'):
+    Operator = operator()
+    Operator.setName(name)
+    Operator.setStatus(status)
+    createOperatorInst(Operator)
+    print('Operator', Operator.name, 'created succesfully')
+    return Operator
+
+def createOperatorInst(Operator):
+    print(Operator.getName())
+    print(Operator.getStatus())
+
+def call(id, Operator):
+    print('Call', id, 'received')
+    queue.append(id)
+
+    if Operator.status == "available":
+        print('Call', id, 'ringing for operator', Operator.name)
+
+def answer(id):
+    print('Answer Working')
+    print('Echo: ', id)
+
+def reject(id):
+    print('Reject Working')
+    print('Echo: ', id)
+
+def hangup(id):
+    print('Hangup Working')
+    print('Echo: ', id)
+
+def debug():
+    # Debug area
+    # Use this function when you want to see the vectors working
+    print('\nQUEUE       ', queue)
+    print('RINGQUEUE   ', ringQueue)
+    print('ONGOINGQUEUE', ongoingQueue)
+
+if __name__ == '__main__':
+    callCenter().cmdloop()
